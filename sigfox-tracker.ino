@@ -1,7 +1,7 @@
 #ifdef ARDUINO
   #include <Arduino.h>
   #ifdef CLION
-    #include <src/SoftwareSerial.h>
+    #include "../Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SoftwareSerial/src/SoftwareSerial.h"
   #else  //  CLION
     #include <SoftwareSerial.h>
   #endif  //  CLION
@@ -9,19 +9,13 @@
 #endif  //  ARDUINO
 
 #include "TinyGPSPlus/TinyGPS++.h"
-TinyGPSPlus gps;
-rgb_lcd lcd;
 
-#ifdef ARDUINO
-  //  Assume GPS receiver is connected to ports RX=2, TX=3.
-  SoftwareSerial receiver(2, 3); // RX, TX
-#else  //  ARDUINO
-  String test_line = "$GPGGA,060556.00,2236.91418,N,11403.24669,E,2,08,1.02,115.1,M,-2.4,M,,0000*43\n";
-  Print receiver(test_line.c_str());
-#endif  //  ARDUINO
+SoftwareSerial receiver(2, 3);  //  Connect GPS receiver to ports RX=2, TX=3.
+rgb_lcd lcd;  //  Connect Grove LCD to I2C port 1.
+TinyGPSPlus gps;
 
 void setup() {
-  lcd.begin(16, 2);
+  lcd.begin(16, 2);  //  16 cols, 2 rows.
 }
 
 void loop() {
