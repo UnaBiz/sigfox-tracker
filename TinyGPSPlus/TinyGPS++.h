@@ -27,7 +27,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "Arduino.h"
 #else
-#include "WProgram.h"
+#ifdef ARDUINO
+  #include "WProgram.h"
+#endif  //  ARDUINO
 #endif
 #include <limits.h>
 
