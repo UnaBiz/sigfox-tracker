@@ -7,11 +7,11 @@ add_definitions(-DCLION)
 
 # Arduino Options - See https://github.com/queezythegreat/arduino-cmake
 # Change this to the Arduino port.
-if(WIN32)
-    set(${PROJECT_NAME}_PORT COM1:)
-else()
-    set(${PROJECT_NAME}_PORT /dev/tty.usbmodem1421)
-endif()
+#if(WIN32)
+    set(${PROJECT_NAME}_PORT COM4)
+#else()
+    #set(${PROJECT_NAME}_PORT /dev/tty.usbmodem1421)
+#endif()
 
 # Build the library.
 set(TinyGPSPlus_SRCS TinyGPSPlus/TinyGPS++.cpp)

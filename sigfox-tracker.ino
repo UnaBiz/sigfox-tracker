@@ -15,12 +15,20 @@ rgb_lcd lcd;  //  Connect Grove LCD to I2C port 1.
 TinyGPSPlus gps;
 
 void setup() {
+  Serial.begin(9600);
+  Serial.println("Starting");
+  receiver.begin(9600);
   lcd.begin(16, 2);  //  16 cols, 2 rows.
 }
 
 void loop() {
-  while (receiver.available() > 0)
-    gps.encode((char) receiver.read());
+  //  Read all data from the GPS receiver and send to TinyGPS for parsing.
+  Serial.print('.');
+  while (receiver.available() > 0) {
+    char ch = (char) receiver.read();
+    Serial.print(ch);
+    gps.encode(ch);
+  }
 #ifdef ARDUINO
 #else  //  ARDUINO
 #endif //  ARDUINO
