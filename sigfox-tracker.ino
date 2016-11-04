@@ -1,4 +1,6 @@
-#include <Arduino.h>
+#ifdef ARDUINO
+  #include <Arduino.h>
+#endif  //  ARDUINO
 
 void setup() {
 
