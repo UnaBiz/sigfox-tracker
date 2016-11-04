@@ -22,7 +22,7 @@ void setup() {
 
 void loop() {
   while (receiver.available() > 0)
-    gps.encode(receiver.read());
+    gps.encode((char) receiver.read());
 #ifdef ARDUINO
 #else  //  ARDUINO
 #endif //  ARDUINO
@@ -34,5 +34,5 @@ void loop() {
     Serial.print(", lng="); Serial.print(lng, 6);
     Serial.print(", alt="); Serial.println(altitude);
   }
-  delay(5 * 1000);
+  delay(1000);
 }
