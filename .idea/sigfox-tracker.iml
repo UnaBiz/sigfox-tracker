@@ -73,6 +73,15 @@
     <content url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/wiring_shift.c">
       <sourceFolder url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/wiring_shift.c" isTestSource="false" />
     </content>
+    <content url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SoftwareSerial/src/SoftwareSerial.cpp">
+      <sourceFolder url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SoftwareSerial/src/SoftwareSerial.cpp" isTestSource="false" />
+    </content>
+    <content url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/src/Wire.cpp">
+      <sourceFolder url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/src/Wire.cpp" isTestSource="false" />
+    </content>
+    <content url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/src/utility/twi.c">
+      <sourceFolder url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/src/utility/twi.c" isTestSource="false" />
+    </content>
     <content url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/sigfox-tracker-a7355cee/a7355cee/Debug/sigfox-tracker_sigfox-tracker.ino.cpp">
       <sourceFolder url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/sigfox-tracker-a7355cee/a7355cee/Debug/sigfox-tracker_sigfox-tracker.ino.cpp" isTestSource="false" />
     </content>
@@ -90,6 +99,8 @@
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cmake/Platform/Arduino.cmake" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cmake/ArduinoToolchain.cmake" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Grove_LCD_RGB_Backlight/rgb_lcd.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Grove_LCD_RGB_Backlight/rgb_lcd.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TinyGPSPlus/TinyGPS++.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TinyGPSPlus/TinyGPS++.h" isTestSource="false" />
     </content>
@@ -102,6 +113,7 @@
           <root url="file://C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/standard" />
+          <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SoftwareSerial" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino" />
         </CLASSES>
@@ -111,32 +123,36 @@
           <root url="file://C:/Program Files (x86)/Arduino/hardware/tools/avr/lib/gcc/avr/4.8.1/include" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/tools/avr/avr/include" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/standard" />
+          <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SoftwareSerial" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino" />
         </SOURCES>
         <excluded>
-          <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/PluggableUSB.cpp" />
+          <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/src/Wire.cpp" />
+          <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/Wire/src/utility/twi.c" />
+          <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SoftwareSerial/src/SoftwareSerial.cpp" />
+          <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/HardwareSerial.cpp" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/wiring_digital.c" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/Stream.cpp" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/USBCore.cpp" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/WMath.cpp" />
+          <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/HardwareSerial1.cpp" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/wiring_analog.c" />
-          <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/abi.cpp" />
-          <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/HardwareSerial.cpp" />
+          <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/wiring_pulse.c" />
+          <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/PluggableUSB.cpp" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/IPAddress.cpp" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/hooks.c" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/CDC.cpp" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/wiring_shift.c" />
+          <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/abi.cpp" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/HardwareSerial2.cpp" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/Tone.cpp" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/new.cpp" />
-          <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/wiring_pulse.c" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/main.cpp" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/HardwareSerial3.cpp" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/wiring.c" />
-          <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/HardwareSerial1.cpp" />
-          <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/HardwareSerial0.cpp" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/WString.cpp" />
+          <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/HardwareSerial0.cpp" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/WInterrupts.c" />
           <root url="file://C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/arduino/Print.cpp" />
         </excluded>

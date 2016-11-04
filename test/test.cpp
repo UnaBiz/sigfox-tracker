@@ -32,6 +32,7 @@ int main() {
   setup();
   for (;;) {
     loop();
+    delay(5000);
     break;
   }
   return 0;

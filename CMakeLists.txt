@@ -18,7 +18,11 @@ set(TinyGPSPlus_SRCS TinyGPSPlus/TinyGPS++.cpp)
 set(TinyGPSPlus_HDRS TinyGPSPlus/TinyGPS++.h)
 generate_arduino_library(TinyGPSPlus)
 
+set(GroveLCD_SRCS Grove_LCD_RGB_Backlight/rgb_lcd.cpp)
+set(GroveLCD_HDRS Grove_LCD_RGB_Backlight/rgb_lcd.h)
+generate_arduino_library(GroveLCD)
+
 set(${CMAKE_PROJECT_NAME}_SKETCH sigfox-tracker.ino)
 set(${PROJECT_NAME}_ARDLIBS SoftwareSerial)
-set(${PROJECT_NAME}_LIBS TinyGPSPlus)
+set(${PROJECT_NAME}_LIBS TinyGPSPlus GroveLCD)
 generate_arduino_firmware(${CMAKE_PROJECT_NAME})

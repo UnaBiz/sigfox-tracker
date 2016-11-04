@@ -150,8 +150,9 @@ char *ultoa(unsigned long num, char *str, int radix) {
   return str;
 }
 
+static char dtostrf_buffer[32];
 char *dtostrf(double value, unsigned char d1, unsigned char d2, char *buf) {
-  return (char *) "888";
+  sprintf(dtostrf_buffer, "%f", value); return dtostrf_buffer;
 }
 
 #define strcpy_P strcpy
@@ -205,10 +206,12 @@ public:
   SoftwareSerial(unsigned rx, unsigned tx): Print(rx, tx) {}
 };
 
-unsigned long millis() {
-  return (unsigned long) clock();
-}
+class rgb_lcd: public Print {
+public:
+  void begin(int cols, int rows) {}  //  Grove LCD.
+};
 
+unsigned long millis() { return (unsigned long) clock(); }
 void delay(long i) {  //  Milliseconds.
   const unsigned long start = millis();
   for (;;) {

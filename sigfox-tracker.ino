@@ -5,9 +5,12 @@
   #else  //  CLION
     #include <SoftwareSerial.h>
   #endif  //  CLION
+  #include "Grove_LCD_RGB_Backlight/rgb_lcd.h"
 #endif  //  ARDUINO
+
 #include "TinyGPSPlus/TinyGPS++.h"
 TinyGPSPlus gps;
+rgb_lcd lcd;
 
 #ifdef ARDUINO
   //  Assume GPS receiver is connected to ports RX=2, TX=3.
@@ -18,6 +21,7 @@ TinyGPSPlus gps;
 #endif  //  ARDUINO
 
 void setup() {
+  lcd.begin(16, 2);
 }
 
 void loop() {
@@ -33,6 +37,10 @@ void loop() {
     Serial.print("lat="); Serial.print(lat, 6);
     Serial.print(", lng="); Serial.print(lng, 6);
     Serial.print(", alt="); Serial.println(altitude);
+
+    const String display = String(lat, 2) + "," +
+        String(lng, 2) + "," + String(altitude, 0);
+    lcd.print(display);
   }
   delay(1000);
 }
