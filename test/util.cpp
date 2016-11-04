@@ -161,23 +161,41 @@ typedef const char *PGM_P;
 #include "LocalWString.cpp"
 
 class Print {
+private:
+  const char *buffer = NULL;
 public:
   Print() {}
   Print(unsigned rx, unsigned tx) {}
+  //  Read characters from buffer.
+  Print(const char *buf) { buffer = buf; }
   void begin(int i) {}
   void print(const char *s) { printf(s); }
   void print(const String &s) { printf(s.c_str()); }
   void print(int i) { printf("%d", i); }
   void print(float f) { printf("%f", f); }
+  void print(double d) { printf("%f", d); }
+  void print(double d, int places) { printf("%f", d); }  //  TODO
   void println(const char *s) { puts(s); }
   void println(const String &s) { puts(s.c_str()); }
   void println(int i) { printf("%d\n", i); }
   void println(float f) { printf("%f\n", f); }
+  void println(double d) { printf("%f\n", d); }
+  void println(double d, int places) { printf("%f\n", d); }  //  TODO
   void flush() {}
   void listen() {}
   void write(uint8_t ch) {}
-  int read() { return -1; }
-  bool available() { return false; }
+  int read() {
+    //  Read characters from buffer.
+    if (buffer == NULL) return -1;
+    if (*buffer == 0) return -1;  //  End of string.
+    return *buffer++;  //  Return next char.
+  }
+  int available() {
+    //  Return number of characters in buffer.
+    if (buffer == NULL) return 0;
+    if (*buffer == 0) return 0;  //  End of string.
+    return strlen(buffer);
+  }
   void end() {}
 };
 Print Serial;
