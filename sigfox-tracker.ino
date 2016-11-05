@@ -33,11 +33,14 @@ void loop() {
     gps.encode(ch);
   }
   if (!gps.location.isValid()) {
-    //  Location not locked yet. Show number of satellites.
+    //  Location not locked yet. Show number of satellites and fixes.
     const uint32_t sat = gps.satellites.value();
+    const uint32_t fix = gps.sentencesWithFix();
     const uint16_t tm = (uint16_t) (millis() / 10000);
-    Serial.print("satellites="); Serial.println(sat);
-    const String display = String(tm) + ": sat="+ sat;
+    Serial.print("satellites="); Serial.print(sat);
+    Serial.print(", fix="); Serial.println(fix);
+    const String display = String(tm) + ": fix=" + fix +
+        ", sat="+ sat;
     lcd.clear(); lcd.print(display);
   }
   else if (gps.location.isUpdated() || gps.altitude.isUpdated()) {
