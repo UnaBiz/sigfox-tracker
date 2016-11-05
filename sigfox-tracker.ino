@@ -39,6 +39,7 @@ static void smartDelay(unsigned long ms)
         gps.encode((char) ch);
       }
     }
+    //  Feed the chars from the USB UART to the GPS receiver.
     while (Serial.available() > 0) {
       int ch = Serial.read();
       if (ch >= 0) receiver.print((char) ch);
