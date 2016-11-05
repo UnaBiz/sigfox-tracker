@@ -16,48 +16,59 @@ rgb_lcd lcd;  //  Connect Grove LCD to I2C port 1.
 TinyGPSPlus gps;
 
 void setup() {
-  Serial.begin(9600);
-  Serial.println("Starting");
   lcd.begin(16, 2);  //  16 cols, 2 rows.
   lcd.print("Starting");
+  Serial.begin(9600); //  Serial.println("Starting");
   receiver.begin(9600);
+}
+
+static void smartDelay(unsigned long ms)
+{
+  // This custom version of delay() ensures that the gps object
+  // is being "fed".
+  unsigned long start = millis();
+  for (;;)
+  {
+    //  Quit if we have waited long enough.
+    if (millis() - start >= ms) break;
+    //  Feed the chars from GPS receiver to TinyGPS.
+    while (receiver.available() > 0) {
+      int ch = receiver.read();
+      if (ch >= 0) {
+        Serial.print((char) ch);
+        gps.encode((char) ch);
+      }
+    }
+    while (Serial.available() > 0) {
+      int ch = Serial.read();
+      if (ch >= 0) receiver.print((char) ch);
+    }
+  }
 }
 
 void loop() {
   //  Read all data from the GPS receiver and send to TinyGPS for parsing.
-  //  TODO: Get server clock.
-  Serial.print('.');
-  while (receiver.available() > 0) {
-    char ch = (char) receiver.read();
-    Serial.print(ch);
-    gps.encode(ch);
-  }
+  //  TODO: Get GPS clock.
+  //  Serial.print('.');
+  smartDelay(1000);
   if (!gps.location.isValid()) {
     //  Location not locked yet. Show number of satellites and fixes.
     const uint32_t sat = gps.satellites.value();
     const uint32_t fix = gps.sentencesWithFix();
-    const uint16_t tm = (uint16_t) (millis() / 10000);
-    Serial.print("satellites="); Serial.print(sat);
-    Serial.print(", fix="); Serial.println(fix);
-    const String display = String(tm) + ": fix=" + fix +
-        ", sat="+ sat;
-    lcd.clear(); lcd.print(display);
+    const uint16_t tm = (uint16_t) (millis() / 40000);
+    const String display = String(tm) + ": fix=" + fix + ", sat=" + sat;
+    lcd.clear(); lcd.print(display);  //  Serial.print(display);
   }
   else if (gps.location.isUpdated() || gps.altitude.isUpdated()) {
     //  Location updated, show the location.
     const double lat = gps.location.lat();
     const double lng = gps.location.lng();
     const double altitude = gps.altitude.meters();
-    Serial.print("lat="); Serial.print(lat, 6);
-    Serial.print(", lng="); Serial.print(lng, 6);
-    Serial.print(", alt="); Serial.println(altitude);
 
     //  TODO: Send to SIGFOX.
     //  TODO: Log to SD card.
 
-    const String display = String(lat, 2) + "," +
-        String(lng, 2) + "," + String(altitude, 0);
-    lcd.clear(); lcd.print(display);
+    const String display = String(lat) + "," + String(lng) + "," + String(altitude);
+    lcd.clear(); lcd.print(display);  //  Serial.println(display);
   }
-  delay(1000);
 }
