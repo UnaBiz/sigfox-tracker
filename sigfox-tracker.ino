@@ -99,6 +99,7 @@ void loop() {
       timestamp.isValid = true;
     }
 
+    //  TODO: Save the GPS state so that GPS tracking is faster next time.
     //  TODO: Send to SIGFOX.
     //  TODO: Log to SD card.
 

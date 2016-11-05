@@ -1,3 +1,8 @@
+*.rb linguist-language=Arduino
+Grove_LCD_RGB_Backlight/* linguist-vendored
+TinyGPSPlus/* linguist-vendored
+unabiz-arduino/* linguist-vendored
+
 # Auto detect text files and perform LF normalization
 * text=auto
 
