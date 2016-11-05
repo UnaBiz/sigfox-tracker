@@ -8,9 +8,9 @@ add_definitions(-DCLION)
 # Arduino Options - See https://github.com/queezythegreat/arduino-cmake
 # Change this to the Arduino port.
 #if(WIN32)
-    #set(${PROJECT_NAME}_PORT COM4)
+    set(${PROJECT_NAME}_PORT COM4)
 #else()
-    set(${PROJECT_NAME}_PORT /dev/tty.usbmodem1421)
+    #set(${PROJECT_NAME}_PORT /dev/tty.usbmodem1421)
 #endif()
 
 # Build the library.

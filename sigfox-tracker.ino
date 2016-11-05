@@ -25,16 +25,23 @@ void setup() {
 
 void loop() {
   //  Read all data from the GPS receiver and send to TinyGPS for parsing.
+  //  TODO: Get server clock.
   Serial.print('.');
   while (receiver.available() > 0) {
     char ch = (char) receiver.read();
     Serial.print(ch);
     gps.encode(ch);
   }
-#ifdef ARDUINO
-#else  //  ARDUINO
-#endif //  ARDUINO
-  if (gps.altitude.isUpdated()) {
+  if (!gps.location.isValid()) {
+    //  Location not locked yet. Show number of satellites.
+    const uint32_t sat = gps.satellites.value();
+    const uint16_t tm = (uint16_t) (millis() / 10000);
+    Serial.print("satellites="); Serial.println(sat);
+    const String display = String(tm) + ": sat="+ sat;
+    lcd.clear(); lcd.print(display);
+  }
+  else if (gps.location.isUpdated() || gps.altitude.isUpdated()) {
+    //  Location updated, show the location.
     const double lat = gps.location.lat();
     const double lng = gps.location.lng();
     const double altitude = gps.altitude.meters();
@@ -42,9 +49,12 @@ void loop() {
     Serial.print(", lng="); Serial.print(lng, 6);
     Serial.print(", alt="); Serial.println(altitude);
 
+    //  TODO: Send to SIGFOX.
+    //  TODO: Log to SD card.
+
     const String display = String(lat, 2) + "," +
         String(lng, 2) + "," + String(altitude, 0);
-    lcd.print(display);
+    lcd.clear(); lcd.print(display);
   }
   delay(1000);
 }
