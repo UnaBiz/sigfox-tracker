@@ -1,7 +1,8 @@
 #ifdef ARDUINO
   #include <Arduino.h>
   #ifdef CLION
-    #include "../Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SoftwareSerial/src/SoftwareSerial.h"
+    #include <src/SoftwareSerial.h>
+    //#include "../Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SoftwareSerial/src/SoftwareSerial.h"
   #else  //  CLION
     #include <SoftwareSerial.h>
   #endif  //  CLION
@@ -17,8 +18,9 @@ TinyGPSPlus gps;
 void setup() {
   Serial.begin(9600);
   Serial.println("Starting");
-  receiver.begin(9600);
   lcd.begin(16, 2);  //  16 cols, 2 rows.
+  lcd.print("Starting");
+  receiver.begin(9600);
 }
 
 void loop() {
