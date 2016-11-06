@@ -6,7 +6,7 @@ project(${PROJECT_NAME})
 add_definitions(-DCLION)
 
 # Arduino Options - See https://github.com/queezythegreat/arduino-cmake
-# Change this to the Arduino port.
+# Change this to the Arduino port for flashing the Arduino.
 #if(WIN32)
     set(${PROJECT_NAME}_PORT COM4)
 #else()

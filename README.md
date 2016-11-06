@@ -45,6 +45,15 @@ https://github.com/UnaBiz/unabiz-arduino
 0. Connect UnaKit to Arduino ports RX=D5, TX=D4
 0. Connect Grove LCD to Arduino I2C port 1
 
+## Message Format
+
+The message sent to SIGFOX consists of 13 bytes:
+
+0. Latitude (encoded double, 4 bytes)
+0. Longitude (encoded double, 4 bytes)
+0. Altitude (encoded double, 4 bytes)
+0. Number of satellites used (integer, 1 byte)
+
 ## test
 
 The `test` folder contains a test program that compiles the project source files
