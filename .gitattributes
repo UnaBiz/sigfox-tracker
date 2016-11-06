@@ -1,6 +1,7 @@
 *.ino linguist-language=Arduino
 *.cpp linguist-language=Arduino
 *.h linguist-language=Arduino
+*.cmake linguist-language=Arduino
 docs/* linguist-documentation
 Grove_LCD_RGB_Backlight/* linguist-vendored
 TinyGPSPlus/* linguist-vendored
