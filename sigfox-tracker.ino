@@ -10,6 +10,10 @@
 #endif  //  ARDUINO
 
 #include "TinyGPSPlus/TinyGPS++.h"
+#include "unabiz-arduino/SIGFOX.h"
+
+//  Create the SIGFOX library. Default to pin D4 for transmit, pin D5 for receive.
+Radiocrafts transceiver;
 
 struct Timestamp {  //  Date time from GPS.
   boolean isValid = false;
@@ -60,6 +64,14 @@ void setup() {
   lcd.print("Starting");
   Serial.begin(9600); //  Serial.println("Starting");
   receiver.begin(9600);
+
+  transceiver.echoOn();  //  Comment this line to hide the echoing of commands.
+  //  Check whether the SIGFOX module is functioning.
+  if (!transceiver.begin())
+  {
+    Serial.println(F("Error: SIGFOX Module KO!"));
+    for(;;) {}  //  Loop forever because we can't continue.
+  }
 }
 
 void loop() {
@@ -70,7 +82,9 @@ void loop() {
 
   //  Wait for 1 second to read any updates.
   smartDelay(1000);
-  const uint32_t used = gps.satellites.isValid() ? gps.satellites.value() : 0;
+
+  //  Check whether we have gotten the GPS location.
+  const uint8_t used = (uint8_t) gps.satellites.isValid() ? gps.satellites.value() : 0;
   if (!gps.location.isValid()) {
     //  Location not locked yet. Show number of satellites and fixes.
     const uint16_t timecount = (uint16_t) (millis() / 40000);
@@ -99,15 +113,29 @@ void loop() {
       timestamp.isValid = true;
     }
 
+    //  Send to SIGFOX.
+    String msg = transceiver.toHex(lat) +
+        transceiver.toHex(lng) +
+        transceiver.toHex(altitude) +
+        transceiver.toHex((char) used);
+    Serial.println(F("\nSending message..."));
+    if (transceiver.sendMessage(msg))
+    {
+      Serial.println(F("Message sent!"));
+    }
+    else
+    {
+      Serial.println(F("Message not sent!"));
+    }
+
     //  TODO: Save the GPS state so that GPS tracking is faster next time.
-    //  TODO: Send to SIGFOX.
     //  TODO: Log to SD card.
 
     const String display = String("[") +
         (timestamp.hour < 10 ? String("0") : String("")) + String(timestamp.hour) + "." +
         (timestamp.minute < 10 ? String("0") : String("")) + String(timestamp.minute) + "." +
         (timestamp.second < 10 ? String("0") : String("")) + String(timestamp.second) + "] " +
-        String(lat) + " / " + String(lng) + " / " + String(altitude);
+        String(lat) + " / " + String(lng) + " / " + String(altitude) + " / " + String(used);
     lcd.clear(); lcd.print(display);  //  Serial.println(display);
   }
 }

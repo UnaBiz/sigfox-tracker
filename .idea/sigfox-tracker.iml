@@ -95,14 +95,17 @@
       <sourceFolder url="file://$USER_HOME$/.CLion2016.2/system/cmake/generated/sigfox-tracker-a7355cee/a7355cee/Release/sigfox-tracker_sigfox-tracker.ino.cpp" isTestSource="false" />
     </content>
     <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/TinyGPSPlus/TinyGPS++.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/TinyGPSPlus/TinyGPS++.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/sigfox-tracker.ino" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Grove_LCD_RGB_Backlight/rgb_lcd.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Grove_LCD_RGB_Backlight/rgb_lcd.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/unabiz-arduino/Radiocrafts.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/unabiz-arduino/SIGFOX.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/unabiz-arduino/Radiocrafts.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cmake/Platform/Arduino.cmake" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/cmake/ArduinoToolchain.cmake" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Grove_LCD_RGB_Backlight/rgb_lcd.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Grove_LCD_RGB_Backlight/rgb_lcd.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/TinyGPSPlus/TinyGPS++.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/TinyGPSPlus/TinyGPS++.h" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">

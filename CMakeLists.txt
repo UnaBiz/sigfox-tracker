@@ -22,7 +22,11 @@ set(GroveLCD_SRCS Grove_LCD_RGB_Backlight/rgb_lcd.cpp)
 set(GroveLCD_HDRS Grove_LCD_RGB_Backlight/rgb_lcd.h)
 generate_arduino_library(GroveLCD)
 
+set(unabiz-arduino_SRCS unabiz-arduino/Radiocrafts.cpp)
+set(unabiz-arduino_HDRS unabiz-arduino/Radiocrafts.h unabiz-arduino/SIGFOX.h)
+generate_arduino_library(unabiz-arduino)
+
 set(${CMAKE_PROJECT_NAME}_SKETCH sigfox-tracker.ino)
 set(${PROJECT_NAME}_ARDLIBS SoftwareSerial)
-set(${PROJECT_NAME}_LIBS TinyGPSPlus GroveLCD)
+set(${PROJECT_NAME}_LIBS TinyGPSPlus GroveLCD unabiz-arduino)
 generate_arduino_firmware(${CMAKE_PROJECT_NAME})
