@@ -10,7 +10,7 @@ info received from the GPS module to the SIGFOX cloud. Hardware requirements:
 
 ## GPS
 
-This project has been tested with the DFRobot GPS:
+This project has been tested with the DFRobot GPS, which is based on the u-blox UBX-M8030-KT GPS module:
 
 https://www.dfrobot.com/index.php?route=product/product&path=57&product_id=1302
 
