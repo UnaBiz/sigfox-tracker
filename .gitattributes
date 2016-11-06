@@ -1,4 +1,5 @@
-*.rb linguist-language=Arduino
+*.ino linguist-language=Arduino
+docs/* linguist-documentation
 Grove_LCD_RGB_Backlight/* linguist-vendored
 TinyGPSPlus/* linguist-vendored
 unabiz-arduino/* linguist-vendored
