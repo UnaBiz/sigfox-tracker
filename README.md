@@ -79,3 +79,4 @@ The `test` folder contains a test program that compiles the project source files
 into a Windows / Mac executable that is easier to debug.  Open the `test` folder
 in CLion to run it on your Windows / Mac.
 
+![SIGFOX Tracker](/docs/sigfox-tracker.jpg)
