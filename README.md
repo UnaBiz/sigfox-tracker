@@ -41,7 +41,7 @@ https://github.com/UnaBiz/unabiz-arduino
 
 ## Connection
 
-0. Connect GPS receiver to Arduino ports RX=D2, TX=D3
+0. Connect GPS receiver to Arduino ports RX=D2, TX=D3, 5V and GND
 0. Connect UnaKit to Arduino ports RX=D5, TX=D4
 0. Connect Grove LCD to Arduino I2C port 1
 
