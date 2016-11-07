@@ -36,8 +36,8 @@ TinyGPSCustom satellitesTracked(gps, "GPGSV", 3);
 
 static void smartDelay(unsigned long ms)
 {
-  // This custom version of delay() ensures that the gps object
-  // is being "fed".
+  //  This custom version of delay() ensures that the gps object is being "fed".
+  receiver.listen();  //  Must listen because SIGFOX may have changed listener.
   unsigned long start = millis();
   for (;;)
   {
@@ -59,6 +59,87 @@ static void smartDelay(unsigned long ms)
   }
 }
 
+void setupSIGFOX() {
+    String result = "";
+  //  Enter command mode.  TODO: Confirm response = '>'
+  Serial.println(F("\nEntering command mode (expecting '>')..."));
+  transceiver.enterCommandMode();
+
+  //  Disable emulation mode.
+  Serial.println(F("\nDisabling emulation mode..."));
+  transceiver.disableEmulator(result);
+
+  //  Check whether emulator is used for transmission.
+  Serial.println(F("\nChecking emulation mode (expecting 0)...")); int emulator = 0;
+  transceiver.getEmulator(emulator);
+
+  //  Get network mode for transmission.  Should return network mode = 0 for uplink only, no downlink.
+  Serial.println(F("\nGetting network mode (expecting 0)..."));
+  transceiver.getParameter(0x3b, result);
+
+  //  Get baud rate.  Should return baud rate = 5 for 19200 bps.
+  Serial.println(F("\nGetting baud rate (expecting 5)..."));
+  transceiver.getParameter(0x30, result);
+
+  //  Set the frequency of SIGFOX module to SG/TW.
+  Serial.println(F("\nSetting frequency..."));  result = "";
+  transceiver.setFrequencySG(result);
+  Serial.print(F("Set frequency result = "));  Serial.println(result);
+
+  //  Get and display the frequency used by the SIGFOX module.  Should return 3 for RCZ4 (SG/TW).
+  Serial.println(F("\nGetting frequency (expecting 3)..."));  String frequency = "";
+  transceiver.getFrequency(frequency);
+  Serial.print(F("Frequency (expecting 3) = "));  Serial.println(frequency);
+
+  //  Read module temperature.
+  Serial.println(F("\nGetting temperature..."));  int temperature = 0;
+  if (transceiver.getTemperature(temperature))
+  {
+    Serial.print(F("Temperature = "));  Serial.print(temperature);  Serial.println(F(" C"));
+  }
+  else
+  {
+    Serial.println(F("Temperature KO"));
+  }
+
+  //  Read module supply voltage.
+  Serial.println(F("\nGetting voltage..."));  float voltage = 0.0;
+  if (transceiver.getVoltage(voltage))
+  {
+    Serial.print(F("Supply voltage = "));  Serial.print(voltage);  Serial.println(F(" V"));
+  }
+  else
+  {
+    Serial.println(F("Supply voltage KO"));
+  }
+
+  //  Read SIGFOX ID and PAC from module.
+  Serial.println(F("\nGetting SIGFOX ID..."));  String id = "", pac = "";
+  if (transceiver.getID(id, pac))
+  {
+    Serial.print(F("SIGFOX ID = "));  Serial.println(id);
+    Serial.print(F("PAC = "));  Serial.println(pac);
+  }
+  else
+  {
+    Serial.println(F("ID KO"));
+  }
+
+  //  Read power.
+  Serial.println(F("\nGetting power..."));  int power = 0;
+  if (transceiver.getPower(power))
+  {
+    Serial.print(F("Power level = "));  Serial.print(power);  Serial.println(F(" dB"));
+  }
+  else
+  {
+    Serial.println(F("Power level KO"));
+  }
+
+  //  Exit command mode and prepare to send message.
+  transceiver.exitCommandMode();
+}
+
 void setup() {
   lcd.begin(16, 2);  //  16 cols, 2 rows.
   lcd.print("Starting");
@@ -70,18 +151,21 @@ void setup() {
   if (!transceiver.begin())
   {
     Serial.println(F("Error: SIGFOX Module KO!"));
-    for(;;) {}  //  Loop forever because we can't continue.
+    //for(;;) {}  //  Loop forever because we can't continue.
   }
+  setupSIGFOX();
 }
+
+int page = 0;
 
 void loop() {
   //  Read all data from the GPS receiver and send to TinyGPS for parsing.
   //  Send all data from USB UART to GPS receiver and vice versa.
   //  This allows the ublox u-center Windows app to interact with the GPS.
   //  Don't show any debug messages to Serial, use LCD instead.
-
-  //  Wait for 1 second to read any updates.
-  smartDelay(1000);
+  
+  //  Wait for 6 seconds to read any updates.
+  smartDelay(6000);
 
   //  Check whether we have gotten the GPS location.
   const uint8_t used = (uint8_t) gps.satellites.isValid() ? gps.satellites.value() : 0;
@@ -93,7 +177,7 @@ void loop() {
     String display = String(timecount) + ": sat trk=" + tracked;
     if (fix > 0) display.concat(String(" / fix=") + fix);
     if (used > 0) display.concat(String(" / used=") + used);
-    lcd.clear(); lcd.print(display);  //  Serial.print(display);
+    lcd.clear(); lcd.print(display);  Serial.print(display);
   }
   else if (gps.location.isUpdated() || gps.altitude.isUpdated()) {
     //  Location updated, get the clock and show the location.
@@ -113,12 +197,18 @@ void loop() {
       timestamp.isValid = true;
     }
 
+    //  Convert to hex and combine them.
+    String lat2 = transceiver.toHex((float) lat);
+    String lng2 = transceiver.toHex((float) lng);
+    String altitude2 = transceiver.toHex((int) (altitude * 10));
+    String used2 = transceiver.toHex((int) used);
+    Serial.println(String("lat=") + lat + " / " + lat2);
+    Serial.println(String("lng=") + lng + " / " + lng2);
+    Serial.println(String("altitude=") + altitude + " / " + altitude2);
+    Serial.println(String("used=") + used + " / " + used2);
+    String msg = lat2 + lng2 + altitude2 + used2;
+
     //  Send to SIGFOX.
-    String msg = transceiver.toHex(lat) +
-        transceiver.toHex(lng) +
-        transceiver.toHex(altitude) +
-        transceiver.toHex((char) used);
-    Serial.println(F("\nSending message..."));
     if (transceiver.sendMessage(msg))
     {
       Serial.println(F("Message sent!"));
@@ -136,6 +226,11 @@ void loop() {
         (timestamp.minute < 10 ? String("0") : String("")) + String(timestamp.minute) + "." +
         (timestamp.second < 10 ? String("0") : String("")) + String(timestamp.second) + "] " +
         String(lat) + " / " + String(lng) + " / " + String(altitude) + " / " + String(used);
-    lcd.clear(); lcd.print(display);  //  Serial.println(display);
+    const String displayPage = display.substring(page * 16, (page + 1) * 16);
+    if (displayPage.length() == 0) page = 0;
+    else {
+      page++;
+      lcd.clear(); lcd.print(displayPage);  Serial.println(displayPage);
+    }
   }
 }
