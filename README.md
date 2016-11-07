@@ -39,22 +39,41 @@ This project calls the UnaKit library for sending GPS data to the SIGFOX cloud:
 
 https://github.com/UnaBiz/unabiz-arduino
 
-## Connection
+## Connecting the hardware
 
-0. Connect GPS receiver to Arduino ports RX=D2, TX=D3, 5V and GND
-0. Connect UnaKit to Arduino ports RX=D5, TX=D4
-0. Connect Grove LCD to Arduino I2C port 1
+Connect the hardware components as follows:
+
+0. UnaKit / Arduino D2 (RX) <--> GPS TX
+0. UnaKit / Arduino D3 (TX) <--> GPS RX
+0. UnaKit / Arduino SCL (I2C) <--> Grove LCD SCL
+0. UnaKit / Arduino SDA (I2C) <--> Grove LCD SDA
+0. UnaKit / Arduino 5V <--> GPS VCC
+0. UnaKit / Arduino 5V <--> Grove LCD VCC
+0. UnaKit / Arduino GND <--> GPS GND
+0. UnaKit / Arduino GND <--> Grove LCD GND
+
+Note: UnaKit uses Arduino ports D4 (TX), D5 (RX)
+
+## Installing the software
+
+```
+git clone https://github.com/UnaBiz/sigfox-tracker.git
+cd sigfox-tracker
+git clone https://github.com/UnaBiz/unabiz-arduino.git
+```
+
+Launch the Arduino IDE and open `sigfox-tracker/sigfox-tracker.ino`
 
 ## Message Format
 
-The message sent to SIGFOX consists of 13 bytes:
+The message sent to SIGFOX consists of 12 bytes:
 
-0. Latitude (encoded double, 4 bytes)
-0. Longitude (encoded double, 4 bytes)
-0. Altitude (encoded double, 4 bytes)
-0. Number of satellites used (integer, 1 byte)
+0. Latitude, in degrees (encoded double, 4 bytes)
+0. Longitude, in degrees (encoded double, 4 bytes)
+0. Altitude * 10, in metres (encoded integer, 2 bytes)
+0. Number of satellites used (encoded integer, 2 bytes)
 
-## test
+## Test Program
 
 The `test` folder contains a test program that compiles the project source files
 into a Windows / Mac executable that is easier to debug.  Open the `test` folder
