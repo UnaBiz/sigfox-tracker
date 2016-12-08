@@ -1,19 +1,20 @@
+#include "unabiz-arduino/SIGFOX.h"
+#include "TinyGPSPlus/TinyGPS++.h"
+
 #ifdef ARDUINO
-  #include <Arduino.h>
   #ifdef CLION
     //#include <src/SoftwareSerial.h>
-    #include "../Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SoftwareSerial/src/SoftwareSerial.h"
-  #else  //  CLION
-    #include <SoftwareSerial.h>
+    //#include "../Program Files (x86)/Arduino/hardware/arduino/avr/libraries/SoftwareSerial/src/SoftwareSerial.h"
   #endif  //  CLION
   #include "Grove_LCD_RGB_Backlight/rgb_lcd.h"
 #endif  //  ARDUINO
 
-#include "TinyGPSPlus/TinyGPS++.h"
-#include "unabiz-arduino/SIGFOX.h"
-
-//  Create the SIGFOX library. Default to pin D4 for transmit, pin D5 for receive.
-Radiocrafts transceiver;
+//  IMPORTANT: Check these settings with UnaBiz to use the SIGFOX library correctly.
+static const String device = "g88pi";  //  Set this to your device name if you're using UnaBiz Emulator.
+static const bool useEmulator = false;  //  Set to true if using UnaBiz Emulator.
+static const bool echo = true;  //  Set to true if the SIGFOX library should display the executed commands.
+static const Country country = COUNTRY_SG;  //  Set this to your country to configure the SIGFOX transmission frequencies.
+static Radiocrafts transceiver(country, useEmulator, device, echo);  //  Uncomment this for UnaBiz UnaShield Dev Kit with Radiocrafts module.
 
 struct Timestamp {  //  Date time from GPS.
   boolean isValid = false;
