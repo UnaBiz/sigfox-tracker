@@ -29,7 +29,7 @@ struct Timestamp {  //  Date time from GPS.
   unsigned long millis = 0;  //  Value of millis() upon update.
 } timestamp;
 
-SoftwareSerial receiver(2, 3);  //  Connect GPS receiver to ports RX=2, TX=3.
+BeanSoftwareSerial receiver(2, 3);  //  Connect GPS receiver to ports RX=2, TX=3.
 #ifdef NOTUSED
   rgb_lcd lcd;  //  Connect Grove LCD to I2C port 1.
 #endif // NOTUSED
