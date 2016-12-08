@@ -49,99 +49,21 @@ static void smartDelay(unsigned long ms)
     if (millis() - start >= ms) break;
     //  Feed the chars from GPS receiver to TinyGPS.
     while (receiver.available() > 0) {
+      if (millis() - start >= ms) break;
       int ch = receiver.read();
       if (ch >= 0) {
         Serial.print((char) ch);
         gps.encode((char) ch);
       }
     }
+#ifdef NOTUSED
     //  Feed the chars from the USB UART to the GPS receiver.
     while (Serial.available() > 0) {
       int ch = Serial.read();
       if (ch >= 0) receiver.print((char) ch);
     }
+#endif // NOTUSED
   }
-}
-
-void setupSIGFOX() {
-    String result = "";
-  //  Enter command mode.  TODO: Confirm response = '>'
-  Serial.println(F("\nEntering command mode (expecting '>')..."));
-  transceiver.enterCommandMode();
-
-  //  Disable emulation mode.
-  Serial.println(F("\nDisabling emulation mode..."));
-  transceiver.disableEmulator(result);
-
-  //  Check whether emulator is used for transmission.
-  Serial.println(F("\nChecking emulation mode (expecting 0)...")); int emulator = 0;
-  transceiver.getEmulator(emulator);
-
-  //  Get network mode for transmission.  Should return network mode = 0 for uplink only, no downlink.
-  Serial.println(F("\nGetting network mode (expecting 0)..."));
-  transceiver.getParameter(0x3b, result);
-
-  //  Get baud rate.  Should return baud rate = 5 for 19200 bps.
-  Serial.println(F("\nGetting baud rate (expecting 5)..."));
-  transceiver.getParameter(0x30, result);
-
-  //  Set the frequency of SIGFOX module to SG/TW.
-  Serial.println(F("\nSetting frequency..."));  result = "";
-  transceiver.setFrequencySG(result);
-  Serial.print(F("Set frequency result = "));  Serial.println(result);
-
-  //  Get and display the frequency used by the SIGFOX module.  Should return 3 for RCZ4 (SG/TW).
-  Serial.println(F("\nGetting frequency (expecting 3)..."));  String frequency = "";
-  transceiver.getFrequency(frequency);
-  Serial.print(F("Frequency (expecting 3) = "));  Serial.println(frequency);
-
-  //  Read module temperature.
-  Serial.println(F("\nGetting temperature..."));  int temperature = 0;
-  if (transceiver.getTemperature(temperature))
-  {
-    Serial.print(F("Temperature = "));  Serial.print(temperature);  Serial.println(F(" C"));
-  }
-  else
-  {
-    Serial.println(F("Temperature KO"));
-  }
-
-  //  Read module supply voltage.
-  Serial.println(F("\nGetting voltage..."));  float voltage = 0.0;
-  if (transceiver.getVoltage(voltage))
-  {
-    Serial.print(F("Supply voltage = "));  Serial.print(voltage);  Serial.println(F(" V"));
-  }
-  else
-  {
-    Serial.println(F("Supply voltage KO"));
-  }
-
-  //  Read SIGFOX ID and PAC from module.
-  Serial.println(F("\nGetting SIGFOX ID..."));  String id = "", pac = "";
-  if (transceiver.getID(id, pac))
-  {
-    Serial.print(F("SIGFOX ID = "));  Serial.println(id);
-    Serial.print(F("PAC = "));  Serial.println(pac);
-  }
-  else
-  {
-    Serial.println(F("ID KO"));
-  }
-
-  //  Read power.
-  Serial.println(F("\nGetting power..."));  int power = 0;
-  if (transceiver.getPower(power))
-  {
-    Serial.print(F("Power level = "));  Serial.print(power);  Serial.println(F(" dB"));
-  }
-  else
-  {
-    Serial.println(F("Power level KO"));
-  }
-
-  //  Exit command mode and prepare to send message.
-  transceiver.exitCommandMode();
 }
 
 void setup() {
@@ -149,17 +71,13 @@ void setup() {
   lcd.begin(16, 2);  //  16 cols, 2 rows.
   lcd.print("Starting");
 #endif  // NOTUSED
-  Serial.begin(9600); //  Serial.println("Starting");
+  //  Initialize console so we can see debug messages (9600 bits per second).
+  Serial.begin(9600);  Serial.println(F("Running setup..."));
   receiver.begin(9600);
 
-  transceiver.echoOn();  //  Comment this line to hide the echoing of commands.
   //  Check whether the SIGFOX module is functioning.
-  if (!transceiver.begin())
-  {
-    Serial.println(F("Error: SIGFOX Module KO!"));
-    //for(;;) {}  //  Loop forever because we can't continue.
-  }
-  setupSIGFOX();
+  while (!transceiver.begin())
+    Serial.println(F("Unable to init SIGFOX module, may be missing"));
 }
 
 int page = 0;
@@ -218,18 +136,13 @@ void loop() {
     String msg = lat2 + lng2 + altitude2 + used2;
 
     //  Send to SIGFOX.
-    if (transceiver.sendMessage(msg))
-    {
+    if (transceiver.sendMessage(msg)) {
       Serial.println(F("Message sent!"));
-    }
-    else
-    {
+    } else {
       Serial.println(F("Message not sent!"));
     }
-
     //  TODO: Save the GPS state so that GPS tracking is faster next time.
     //  TODO: Log to SD card.
-
 #if NOTUSED
     const String display = String("[") +
         (timestamp.hour < 10 ? String("0") : String("")) + String(timestamp.hour) + "." +
