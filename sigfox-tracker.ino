@@ -1,5 +1,5 @@
-#include "unabiz-arduino/SIGFOX.h"
-#include "TinyGPSPlus/TinyGPS++.h"
+#include <SIGFOX.h>
+#include <TinyGPS++.h>
 
 #ifdef ARDUINO
   #ifdef CLION
@@ -30,7 +30,9 @@ struct Timestamp {  //  Date time from GPS.
 } timestamp;
 
 SoftwareSerial receiver(2, 3);  //  Connect GPS receiver to ports RX=2, TX=3.
-rgb_lcd lcd;  //  Connect Grove LCD to I2C port 1.
+#ifdef NOTUSED
+  rgb_lcd lcd;  //  Connect Grove LCD to I2C port 1.
+#endif // NOTUSED
 TinyGPSPlus gps;  //  For parsing the GPS output.
 
 //  $GPGSV parameter 3 shows the number of satellites in view being tracked.
@@ -143,8 +145,10 @@ void setupSIGFOX() {
 }
 
 void setup() {
+#ifdef NOTUSED
   lcd.begin(16, 2);  //  16 cols, 2 rows.
   lcd.print("Starting");
+#endif  // NOTUSED
   Serial.begin(9600); //  Serial.println("Starting");
   receiver.begin(9600);
 
@@ -179,7 +183,10 @@ void loop() {
     String display = String(timecount) + ": sat trk=" + tracked;
     if (fix > 0) display.concat(String(" / fix=") + fix);
     if (used > 0) display.concat(String(" / used=") + used);
-    lcd.clear(); lcd.print(display);  Serial.print(display);
+#ifdef NOTUSED
+    lcd.clear(); lcd.print(display);
+#endif  //  NOTUSED
+    Serial.print(display);
   }
   else if (gps.location.isUpdated() || gps.altitude.isUpdated()) {
     //  Location updated, get the clock and show the location.
