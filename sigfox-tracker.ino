@@ -38,23 +38,23 @@ TinyGPSPlus gps;  //  For parsing the GPS output.
 //  $GPGSV parameter 3 shows the number of satellites in view being tracked.
 TinyGPSCustom satellitesTracked(gps, "GPGSV", 3);
 
-static void smartDelay(unsigned long ms)
-{
+static void smartDelay(unsigned long ms) {
   //  This custom version of delay() ensures that the gps object is being "fed".
   receiver.listen();  //  Must listen because SIGFOX may have changed listener.
   unsigned long start = millis();
-  for (;;)
-  {
+  for (;;) {
     //  Quit if we have waited long enough.
     if (millis() - start >= ms) break;
     //  Feed the chars from GPS receiver to TinyGPS.
     while (receiver.available() > 0) {
-      if (millis() - start >= ms) break;
       int ch = receiver.read();
       if (ch >= 0) {
+#ifdef NOTUSED
         Serial.print((char) ch);
+#endif // NOTUSED
         gps.encode((char) ch);
       }
+      if (millis() - start >= ms) break;
     }
 #ifdef NOTUSED
     //  Feed the chars from the USB UART to the GPS receiver.
