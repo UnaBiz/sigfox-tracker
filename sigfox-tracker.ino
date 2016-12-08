@@ -15,6 +15,7 @@ static const bool useEmulator = false;  //  Set to true if using UnaBiz Emulator
 static const bool echo = true;  //  Set to true if the SIGFOX library should display the executed commands.
 static const Country country = COUNTRY_SG;  //  Set this to your country to configure the SIGFOX transmission frequencies.
 static Radiocrafts transceiver(country, useEmulator, device, echo);  //  Uncomment this for UnaBiz UnaShield Dev Kit with Radiocrafts module.
+#define DELAY_PER_MESSAGE 2  //  How many seconds to wait before sending the next message.
 
 struct Timestamp {  //  Date time from GPS.
   boolean isValid = false;
@@ -165,8 +166,8 @@ void loop() {
   //  This allows the ublox u-center Windows app to interact with the GPS.
   //  Don't show any debug messages to Serial, use LCD instead.
   
-  //  Wait for 6 seconds to read any updates.
-  smartDelay(6000);
+  //  Wait for a few seconds to read any updates.
+  smartDelay(DELAY_PER_MESSAGE * 1000);
 
   //  Check whether we have gotten the GPS location.
   const uint8_t used = (uint8_t) gps.satellites.isValid() ? gps.satellites.value() : 0;
@@ -203,10 +204,10 @@ void loop() {
     String lng2 = transceiver.toHex((float) lng);
     String altitude2 = transceiver.toHex((int) (altitude * 10));
     String used2 = transceiver.toHex((int) used);
-    Serial.println(String("lat=") + lat + " / " + lat2);
-    Serial.println(String("lng=") + lng + " / " + lng2);
-    Serial.println(String("altitude=") + altitude + " / " + altitude2);
-    Serial.println(String("used=") + used + " / " + used2);
+    Serial.print("lat="); Serial.print(lat); Serial.print(" / "); Serial.println(lat2);
+    Serial.print("lng="); Serial.print(lng); Serial.print(" / "); Serial.println(lng2);
+    Serial.print("altitude="); Serial.print(altitude); Serial.print(" / "); Serial.println(altitude2);
+    Serial.print("used="); Serial.print(used); Serial.print(" / "); Serial.println(used2);
     String msg = lat2 + lng2 + altitude2 + used2;
 
     //  Send to SIGFOX.
@@ -222,6 +223,7 @@ void loop() {
     //  TODO: Save the GPS state so that GPS tracking is faster next time.
     //  TODO: Log to SD card.
 
+#if NOTUSED
     const String display = String("[") +
         (timestamp.hour < 10 ? String("0") : String("")) + String(timestamp.hour) + "." +
         (timestamp.minute < 10 ? String("0") : String("")) + String(timestamp.minute) + "." +
@@ -233,5 +235,6 @@ void loop() {
       page++;
       lcd.clear(); lcd.print(displayPage);  Serial.println(displayPage);
     }
+#endif
   }
 }
