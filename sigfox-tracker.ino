@@ -65,18 +65,27 @@ static void smartDelay(unsigned long ms) {
   }
 }
 
+void showBatteryLevel() {
+#ifdef BEAN_BEAN_BEAN_H
+  //  Flash the LED to show the battery level remaining.  One flash represents 10%.
+  int batteryPercentage = Bean.getBatteryLevel();  // Between 0 and 100
+  int batteryVoltage = Bean.getBatteryVoltage();   // Between 191 and 353 (1.91V-3.53V)
+  for (int i = 0; i < batteryPercentage; i = i + 9) {
+    delay(1000);
+    setLed(0, 0, 0);  //  LED Off.
+    delay(200);
+    if (batteryPercentage < 30) setLed(125, 125, 0);  //  Yellow
+    else setLed(0, 0, 255);  //  Blue
+  }
+  Serial.print(F("Battery: ")); Serial.print(batteryPercentage);
+  Serial.print(F("%, ")); Serial.print(batteryVoltage / 100); Serial.println('V');
+#endif // BEAN_BEAN_BEAN_H
+}
+
 void setup() {
   //  Initialize console so we can see debug messages (9600 bits per second).
   Serial.begin(9600);  Serial.println(F("Running setup..."));
-#ifdef BEAN_BEAN_BEAN_H
-  //  Show low battery.
-  int batteryPercentage = Bean.getBatteryLevel();  // Between 0 and 100
-  int batteryVoltage = Bean.getBatteryVoltage();   // Between 191 and 353 (1.91V-3.53V)
-  Serial.print(F("Battery: ")); Serial.print(batteryPercentage);
-  Serial.print(F("%, ")); Serial.print(batteryVoltage / 100); Serial.println('V');
-  if (batteryPercentage < 25) setLed(125, 125, 0);  //  Yellow
-  else setLed(0, 0, 255);  //  Blue
-#endif // BEAN_BEAN_BEAN_H
+  showBatteryLevel();  //  Flash the LED to show the battery level.
 
   //  Check whether the SIGFOX module is functioning.
   while (!transceiver.begin()) {
