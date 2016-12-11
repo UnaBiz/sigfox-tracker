@@ -40,13 +40,13 @@ struct Timestamp {  //  Date time from GPS.
   #define sleepMilliseconds(ms) delay(ms)
 #endif  //  BEAN_BEAN_BEAN_H
 
-#ifdef NOTUSED
-  rgb_lcd lcd;  //  Connect Grove LCD to I2C port 1.
-#endif // NOTUSED
 TinyGPSPlus gps;  //  For parsing the GPS output.
-
 //  $GPGSV parameter 3 shows the number of satellites in view being tracked.
 TinyGPSCustom satellitesTracked(gps, "GPGSV", 3);
+
+#ifdef LCD
+rgb_lcd lcd;  //  Connect Grove LCD to I2C port 1.
+#endif // LCD
 
 static void smartDelay(unsigned long ms) {
   //  This custom version of delay() ensures that the gps object is being "fed".
