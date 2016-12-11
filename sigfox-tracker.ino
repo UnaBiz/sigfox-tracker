@@ -102,9 +102,10 @@ void loop() {
   smartDelay(DELAY_PER_MESSAGE * 1000);
   //  Show low battery.
 #ifdef BEAN_BEAN_BEAN_H
-  Serial.print("Battery %=");  Serial.println(Bean.getBatteryLevel());
-  if (Bean.getBatteryLevel() < 25) setLed(255, 255, 0);  //  Yellow
-  else setLed(0, 0, 0);  //  LED off.
+  //  TODO: Not working.
+  //  Serial.print("Battery %=");  Serial.println(Bean.getBatteryLevel());
+  //  if (Bean.getBatteryLevel() < 25) setLed(255, 255, 0);  //  Yellow
+  setLed(0, 0, 0);  //  LED off.
 #endif // BEAN_BEAN_BEAN_H
 
   //  Check whether we have gotten the GPS location.
