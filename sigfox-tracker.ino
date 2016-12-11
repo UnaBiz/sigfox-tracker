@@ -100,8 +100,12 @@ void loop() {
   
   //  Wait for a few seconds to read any updates.
   smartDelay(DELAY_PER_MESSAGE * 1000);
-  setLed(0, 0, 0);
-  //  TODO: Show low battery.
+  //  Show low battery.
+#ifdef BEAN_BEAN_BEAN_H
+  Serial.print("Battery %=");  Serial.println(Bean.getBatteryLevel());
+  if (Bean.getBatteryLevel() < 25) setLed(255, 255, 0);  //  Yellow
+  else setLed(0, 0, 0);  //  LED off.
+#endif // BEAN_BEAN_BEAN_H
 
   //  Check whether we have gotten the GPS location.
   const uint8_t used = (uint8_t) gps.satellites.isValid() ? gps.satellites.value() : 0;
