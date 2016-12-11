@@ -32,10 +32,12 @@ struct Timestamp {  //  Date time from GPS.
 #ifdef BEAN_BEAN_BEAN_H
   BeanSoftwareSerial receiver(2, 3);  //  Connect GPS receiver to ports RX=2, TX=3.
   #define setLed(r, g, b) Bean.setLed(r, g, b)
+  #define sleepMilliseconds(ms) Bean.sleep(ms)
 
 #else  //  BEAN_BEAN_BEAN_H
   SoftwareSerial receiver(2, 3);  //  Connect GPS receiver to ports RX=2, TX=3.
   #define setLed(r, g, b) {}
+  #define sleepMilliseconds(ms) delay(ms)
 #endif  //  BEAN_BEAN_BEAN_H
 
 #ifdef NOTUSED
@@ -48,6 +50,7 @@ TinyGPSCustom satellitesTracked(gps, "GPGSV", 3);
 
 static void smartDelay(unsigned long ms) {
   //  This custom version of delay() ensures that the gps object is being "fed".
+  sleepMilliseconds(10);  //  Give the Bean some time to run system functions.
   receiver.listen();  //  Must listen because SIGFOX may have changed listener.
   unsigned long start = millis();
   for (;;) {
@@ -56,31 +59,25 @@ static void smartDelay(unsigned long ms) {
     //  Feed the chars from GPS receiver to TinyGPS.
     while (receiver.available() > 0) {
       int ch = receiver.read();
-      if (ch >= 0) {
-#ifdef NOTUSED
-        Serial.print((char) ch);
-#endif // NOTUSED
-        gps.encode((char) ch);
-      }
+      if (ch >= 0) gps.encode((char) ch);
       if (millis() - start >= ms) break;
     }
-#ifdef NOTUSED
-    //  Feed the chars from the USB UART to the GPS receiver.
-    while (Serial.available() > 0) {
-      int ch = Serial.read();
-      if (ch >= 0) receiver.print((char) ch);
-    }
-#endif // NOTUSED
   }
 }
 
 void setup() {
-#ifdef NOTUSED
-  lcd.begin(16, 2);  lcd.print("Starting");  //  16 cols, 2 rows.
-#endif  // NOTUSED
   //  Initialize console so we can see debug messages (9600 bits per second).
   Serial.begin(9600);  Serial.println(F("Running setup..."));
-  setLed(0, 0, 255);  //  Blue
+#ifdef BEAN_BEAN_BEAN_H
+  //  Show low battery.
+  int batteryPercentage = Bean.getBatteryLevel();  // Between 0 and 100
+  int batteryVoltage = Bean.getBatteryVoltage();   // Between 191 and 353 (1.91V-3.53V)
+  Serial.print(F("Battery: ")); Serial.print(batteryPercentage);
+  Serial.print(F("%, ")); Serial.print(batteryVoltage / 100); Serial.println('V');
+  if (batteryPercentage < 25) setLed(125, 125, 0);  //  Yellow
+  else setLed(0, 0, 255);  //  Blue
+#endif // BEAN_BEAN_BEAN_H
+
   //  Check whether the SIGFOX module is functioning.
   while (!transceiver.begin()) {
     Serial.println(F("Unable to init SIGFOX module, may be missing"));
@@ -88,6 +85,9 @@ void setup() {
   }
   //  Start listening to GPS.
   receiver.begin(9600);
+#ifdef LCD
+  lcd.begin(16, 2);  lcd.print("Starting");  //  Set Grove LCD to 16 cols, 2 rows.
+#endif  // LCD
 }
 
 int page = 0;
@@ -100,29 +100,25 @@ void loop() {
   
   //  Wait for a few seconds to read any updates.
   smartDelay(DELAY_PER_MESSAGE * 1000);
-  //  Show low battery.
-#ifdef BEAN_BEAN_BEAN_H
-  //  TODO: Not working.
-  //  Serial.print("Battery %=");  Serial.println(Bean.getBatteryLevel());
-  //  if (Bean.getBatteryLevel() < 25) setLed(255, 255, 0);  //  Yellow
   setLed(0, 0, 0);  //  LED off.
-#endif // BEAN_BEAN_BEAN_H
 
   //  Check whether we have gotten the GPS location.
   const uint8_t used = (uint8_t) gps.satellites.isValid() ? gps.satellites.value() : 0;
   if (!gps.location.isValid()) {
     //  Location not locked yet. Show number of satellites and fixes.
-    const uint16_t timecount = (uint16_t) (millis() / 40000);
+    setLed(200, 75, 0);  //  Orange
     const uint32_t fix = gps.sentencesWithFix();
     const char *tracked = satellitesTracked.isValid() ? satellitesTracked.value() : "0";
+    Serial.print(F("trk=")); Serial.print(tracked);
+    Serial.print(F(" ,fix=")); Serial.println(fix);
+#ifdef LCD
+    const uint16_t timecount = (uint16_t) (millis() / 40000);
     String display = String(timecount) + ": sat trk=" + tracked;
     if (fix > 0) display.concat(String(" / fix=") + fix);
     if (used > 0) display.concat(String(" / used=") + used);
-#ifdef NOTUSED
     lcd.clear(); lcd.print(display);
+    Serial.println(display);
 #endif  //  NOTUSED
-    Serial.print(display);
-    setLed(0xff, 0xa5, 0);  //  Orange
   }
   else if (gps.location.isUpdated() || gps.altitude.isUpdated()) {
     //  Location updated, get the clock and show the location.
@@ -147,10 +143,12 @@ void loop() {
     String lng2 = transceiver.toHex((float) lng);
     String altitude2 = transceiver.toHex((int) (altitude * 10));
     String used2 = transceiver.toHex((int) used);
+#ifdef LCD
     Serial.print("lat="); Serial.print(lat); Serial.print(" / "); Serial.println(lat2);
     Serial.print("lng="); Serial.print(lng); Serial.print(" / "); Serial.println(lng2);
     Serial.print("altitude="); Serial.print(altitude); Serial.print(" / "); Serial.println(altitude2);
     Serial.print("used="); Serial.print(used); Serial.print(" / "); Serial.println(used2);
+#endif  //  NOTUSED
     String msg = lat2 + lng2 + altitude2 + used2;
 
     //  TODO: Bug in transceiver requires us to enter and exit command mode first.
@@ -166,7 +164,7 @@ void loop() {
     }
     //  TODO: Save the GPS state so that GPS tracking is faster next time.
     //  TODO: Log to SD card.
-#if NOTUSED
+#ifdef LCD
     const String display = String("[") +
         (timestamp.hour < 10 ? String("0") : String("")) + String(timestamp.hour) + "." +
         (timestamp.minute < 10 ? String("0") : String("")) + String(timestamp.minute) + "." +
