@@ -81,14 +81,12 @@ void setup() {
   //  Initialize console so we can see debug messages (9600 bits per second).
   Serial.begin(9600);  Serial.println(F("Running setup..."));
   setLed(0, 0, 255);  //  Blue
-
   //  Check whether the SIGFOX module is functioning.
   while (!transceiver.begin()) {
     Serial.println(F("Unable to init SIGFOX module, may be missing"));
     setLed(255, 0, 0);  //  Red
   }
-
-  //  Must start GPS after SIGFOX transceiver because it may mess up the serial comms.
+  //  Start listening to GPS.
   receiver.begin(9600);
 }
 
@@ -154,6 +152,9 @@ void loop() {
     Serial.print("altitude="); Serial.print(altitude); Serial.print(" / "); Serial.println(altitude2);
     Serial.print("used="); Serial.print(used); Serial.print(" / "); Serial.println(used2);
     String msg = lat2 + lng2 + altitude2 + used2;
+
+    //  TODO: Bug in transceiver requires us to enter and exit command mode first.
+    int temperature;  transceiver.getTemperature(temperature);
 
     //  Send to SIGFOX.
     if (transceiver.sendMessage(msg)) {
