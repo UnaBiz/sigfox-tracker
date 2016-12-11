@@ -29,7 +29,15 @@ struct Timestamp {  //  Date time from GPS.
   unsigned long millis = 0;  //  Value of millis() upon update.
 } timestamp;
 
-BeanSoftwareSerial receiver(2, 3);  //  Connect GPS receiver to ports RX=2, TX=3.
+#ifdef BEAN_BEAN_BEAN_H
+  BeanSoftwareSerial receiver(2, 3);  //  Connect GPS receiver to ports RX=2, TX=3.
+  #define setLed(r, g, b) Bean.setLed(r, g, b)
+
+#else  //  BEAN_BEAN_BEAN_H
+  SoftwareSerial receiver(2, 3);  //  Connect GPS receiver to ports RX=2, TX=3.
+  #define setLed(r, g, b) {}
+#endif  //  BEAN_BEAN_BEAN_H
+
 #ifdef NOTUSED
   rgb_lcd lcd;  //  Connect Grove LCD to I2C port 1.
 #endif // NOTUSED
@@ -68,12 +76,12 @@ static void smartDelay(unsigned long ms) {
 
 void setup() {
 #ifdef NOTUSED
-  lcd.begin(16, 2);  //  16 cols, 2 rows.
-  lcd.print("Starting");
+  lcd.begin(16, 2);  lcd.print("Starting");  //  16 cols, 2 rows.
 #endif  // NOTUSED
   //  Initialize console so we can see debug messages (9600 bits per second).
   Serial.begin(9600);  Serial.println(F("Running setup..."));
   receiver.begin(9600);
+  setLed(0, 0, 255);  //  Blue
 
   //  Check whether the SIGFOX module is functioning.
   while (!transceiver.begin())
@@ -90,6 +98,7 @@ void loop() {
   
   //  Wait for a few seconds to read any updates.
   smartDelay(DELAY_PER_MESSAGE * 1000);
+  setLed(0, 0, 0);
 
   //  Check whether we have gotten the GPS location.
   const uint8_t used = (uint8_t) gps.satellites.isValid() ? gps.satellites.value() : 0;
@@ -105,6 +114,7 @@ void loop() {
     lcd.clear(); lcd.print(display);
 #endif  //  NOTUSED
     Serial.print(display);
+    setLed(0xff, 0xa5, 0);  //  Orange
   }
   else if (gps.location.isUpdated() || gps.altitude.isUpdated()) {
     //  Location updated, get the clock and show the location.
@@ -138,8 +148,10 @@ void loop() {
     //  Send to SIGFOX.
     if (transceiver.sendMessage(msg)) {
       Serial.println(F("Message sent!"));
+      setLed(0, 255, 0);  //  Green
     } else {
       Serial.println(F("Message not sent!"));
+      setLed(255, 0, 0);  //  Red
     }
     //  TODO: Save the GPS state so that GPS tracking is faster next time.
     //  TODO: Log to SD card.
