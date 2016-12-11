@@ -84,8 +84,10 @@ void setup() {
   setLed(0, 0, 255);  //  Blue
 
   //  Check whether the SIGFOX module is functioning.
-  while (!transceiver.begin())
+  while (!transceiver.begin()) {
     Serial.println(F("Unable to init SIGFOX module, may be missing"));
+    setLed(255, 0, 0);  //  Red
+  }
 }
 
 int page = 0;
