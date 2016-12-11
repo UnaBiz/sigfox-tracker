@@ -80,7 +80,6 @@ void setup() {
 #endif  // NOTUSED
   //  Initialize console so we can see debug messages (9600 bits per second).
   Serial.begin(9600);  Serial.println(F("Running setup..."));
-  receiver.begin(9600);
   setLed(0, 0, 255);  //  Blue
 
   //  Check whether the SIGFOX module is functioning.
@@ -88,6 +87,9 @@ void setup() {
     Serial.println(F("Unable to init SIGFOX module, may be missing"));
     setLed(255, 0, 0);  //  Red
   }
+
+  //  Must start GPS after SIGFOX transceiver because it may mess up the serial comms.
+  receiver.begin(9600);
 }
 
 int page = 0;
