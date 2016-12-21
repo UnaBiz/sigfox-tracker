@@ -1,5 +1,5 @@
 ## sigfox-tracker
-# GPS tracker with logging to SIGFOX based on UnaKit development kit by UnaBiz
+# GPS tracker with logging to SIGFOX based on UnaShield development kit by UnaBiz
 
 This Arduino project periodically transmits the latitude, longitude, altitude and timestamp
 info received from the GPS module to the SIGFOX cloud. Hardware requirements:
