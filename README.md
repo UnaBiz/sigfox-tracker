@@ -4,7 +4,7 @@
 This Arduino project periodically transmits the latitude, longitude, altitude and timestamp
 info received from the GPS module to the SIGFOX cloud. Hardware requirements:
 
-0. UnaKit Arduino development kit for SIGFOX by UnaBiz
+0. [UnaShield Arduino development kit](https://github.com/UnaBiz/unabiz-arduino/wiki/UnaShield) for SIGFOX by UnaBiz
 0. DFRobot GPS module
 0. Grove LCD display
 
@@ -35,7 +35,7 @@ http://wiki.seeed.cc/Grove-LCD_RGB_Backlight/
 
 ## UnaKit
 
-This project calls the UnaKit library for sending GPS data to the SIGFOX cloud:
+This project calls the UnaShield library for sending GPS data to the SIGFOX cloud:
 
 https://github.com/UnaBiz/unabiz-arduino
 
@@ -43,16 +43,16 @@ https://github.com/UnaBiz/unabiz-arduino
 
 Connect the hardware components as follows:
 
-0. UnaKit / Arduino D2 (RX) <--> GPS TX
-0. UnaKit / Arduino D3 (TX) <--> GPS RX
-0. UnaKit / Arduino SCL (I2C) <--> Grove LCD SCL
-0. UnaKit / Arduino SDA (I2C) <--> Grove LCD SDA
-0. UnaKit / Arduino 5V <--> GPS VCC
-0. UnaKit / Arduino 5V <--> Grove LCD VCC
-0. UnaKit / Arduino GND <--> GPS GND
-0. UnaKit / Arduino GND <--> Grove LCD GND
+0. UnaShield / Arduino D2 (RX) <--> GPS TX
+0. UnaShield / Arduino D3 (TX) <--> GPS RX
+0. UnaShield / Arduino SCL (I2C) <--> Grove LCD SCL
+0. UnaShield / Arduino SDA (I2C) <--> Grove LCD SDA
+0. UnaShield / Arduino 5V <--> GPS VCC
+0. UnaShield / Arduino 5V <--> Grove LCD VCC
+0. UnaShield / Arduino GND <--> GPS GND
+0. UnaShield / Arduino GND <--> Grove LCD GND
 
-Note: UnaKit uses Arduino ports D4 (TX), D5 (RX)
+Note: UnaShield uses Arduino ports D4 (TX), D5 (RX)
 
 ## Installing the software
 
@@ -79,4 +79,17 @@ The `test` folder contains a test program that compiles the project source files
 into a Windows / Mac executable that is easier to debug.  Open the `test` folder
 in CLion to run it on your Windows / Mac.
 
-![SIGFOX Tracker](/docs/sigfox-tracker.jpg)
+## LightBlue Bean+ now supported
+
+This sketch works with the **[LightBlue Bean+ by Punch Through](https://punchthrough.com/bean)** as described below.
+We call this the *UnaTumbler.*
+
+https://github.com/UnaBiz/unabiz-arduino/wiki/UnaShield
+
+![UnaTumbler SIGFOX Tracker](https://github.com/UnaBiz/media/blob/master/sigfox-tracker/unatumbler-bus.jpg)
+
+## SIGFOX Tracker with Arduino Uno
+
+Here is the original SIGFOX Tracker with UnaShield and Arduino Uno.
+
+![SIGFOX Tracker with Arduino Uno](https://github.com/UnaBiz/media/blob/master/sigfox-tracker/sigfox-tracker.jpg)
